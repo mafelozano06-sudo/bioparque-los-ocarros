@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Bioparque Los Ocarros</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f4f4f4;
+}
+
+#mapa{
+position:relative;
+width:100%;
+max-width:1000px;
+margin:auto;
+}
+
+#mapa img{
+width:100%;
+}
+
+.punto{
+
+position:absolute;
+
+width:20px;
+height:20px;
+
+background:red;
+
+border-radius:50%;
+
+cursor:pointer;
+
+}
+
+#popup{
+
+position:fixed;
+
+bottom:0;
+
+background:white;
+
+width:100%;
+
+padding:20px;
+
+display:none;
+
+box-shadow:0 -5px 10px rgba(0,0,0,0.3);
+
+}
+
+#popup img{
+
+width:100%;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="mapa">
+
+<img src="mapa.jpg">
+
+</div>
+
+<div id="popup">
+
+<h2 id="nombre"></h2>
+
+<img id="foto">
+
+<p id="historia"></p>
+
+<button onclick="cerrar()">Cerrar</button>
+
+</div>
+
+<script>
+
+let sheetID = "TU_ID_SHEET";
+
+let url = `https://opensheet.elk.sh/${sheetID}/Exhibiciones`;
+
+fetch(url)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+data.forEach(animal=>{
+
+let punto = document.createElement("div");
+
+punto.className="punto";
+
+punto.style.left = animal.X+"px";
+
+punto.style.top = animal.Y+"px";
+
+punto.onclick=()=>mostrar(animal);
+
+document.getElementById("mapa").appendChild(punto);
+
+});
+
+});
+
+function mostrar(animal){
+
+document.getElementById("popup").style.display="block";
+
+document.getElementById("nombre").innerText=animal.Nombre;
+
+document.getElementById("foto").src=animal.Foto;
+
+document.getElementById("historia").innerText=animal.Historia;
+
+}
+
+function cerrar(){
+
+document.getElementById("popup").style.display="none";
+
+}
+
+</script>
+
+</body>
+</html>
