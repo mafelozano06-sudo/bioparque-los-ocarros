@@ -1,95 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Bioparque Los Ocarros</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 
 body{
-margin:0;
-font-family:Arial;
-background:#f4f4f4;
+ margin:0;
+ font-family:'Poppins', sans-serif;
+ background:#f5f5f5;
 }
 
-#mapa{
-position:relative;
-width:100%;
-max-width:1000px;
-margin:auto;
+/* MAPA */
+
+#map-container{
+ position:relative;
+ width:100%;
+ max-width:1200px;
+ margin:auto;
 }
 
-#mapa img{
-width:100%;
+#map-image{
+ width:100%;
+ height:auto;
+ display:block;
 }
 
-.punto{
+/* PUNTOS */
 
-position:absolute;
+.point{
 
-width:20px;
-height:20px;
-
-background:red;
-
-border-radius:50%;
-
-cursor:pointer;
+ position:absolute;
+ width:12px;
+ height:12px;
+ background:#ff6600;
+ border-radius:50%;
+ transform:translate(-50%,-50%);
+ cursor:pointer;
+ box-shadow:0 0 6px rgba(0,0,0,0.4);
 
 }
+
+/* POPUP */
 
 #popup{
 
-position:fixed;
+ position:fixed;
+ top:0;
+ left:0;
+ width:100%;
+ height:100%;
+ background:white;
+ display:none;
+ flex-direction:column;
+ z-index:999;
 
-bottom:0;
+}
 
-background:white;
+#popup-header{
 
-width:100%;
-
-padding:20px;
-
-display:none;
-
-box-shadow:0 -5px 10px rgba(0,0,0,0.3);
+ background:#ff6600;
+ color:white;
+ padding:18px;
+ font-size:22px;
+ font-weight:600;
 
 }
 
 #popup img{
 
-width:100%;
+ width:100%;
+ max-height:40vh;
+ object-fit:cover;
+
+}
+
+#popup-text{
+
+ padding:18px;
+ font-size:16px;
+ line-height:1.5;
+
+}
+
+#close{
+
+ position:absolute;
+ top:15px;
+ right:20px;
+ color:white;
+ font-size:28px;
+ cursor:pointer;
 
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div id="mapa">
 
-<img src="mapa.jpg">
+<div id="map-container">
+
+<img src="mapa.jpg" id="map-image">
 
 </div>
+
 
 <div id="popup">
 
-<h2 id="nombre"></h2>
+<div id="popup-header">
 
-<img id="foto">
+<span id="popup-title"></span>
 
-<p id="historia"></p>
-
-<button onclick="cerrar()">Cerrar</button>
+<span id="close">×</span>
 
 </div>
 
+<img id="popup-img">
+
+<div id="popup-text"></div>
+
+</div>
+
+
 <script>
 
-let sheetID = "1qDmXxIH5BqLCErrFmbq8li32itS7C7CJEB27qNVTpn0";
+
+let sheetID = "TU_ID_AQUI";
 
 let url = `https://opensheet.elk.sh/${sheetID}/Exhibiciones`;
+
 
 fetch(url)
 
@@ -99,41 +146,49 @@ fetch(url)
 
 data.forEach(animal=>{
 
-let punto = document.createElement("div");
 
-punto.className="punto";
+let point=document.createElement("div");
 
-punto.style.left = animal.X+"px";
+point.className="point";
 
-punto.style.top = animal.Y+"px";
+point.style.left=animal.X+"%";
 
-punto.onclick=()=>mostrar(animal);
+point.style.top=animal.Y+"%";
 
-document.getElementById("mapa").appendChild(punto);
+
+point.onclick=()=>{
+
+
+document.getElementById("popup").style.display="flex";
+
+document.getElementById("popup-title").innerText=animal.Nombre;
+
+document.getElementById("popup-img").src=animal.Foto;
+
+document.getElementById("popup-text").innerText=animal.Historia;
+
+
+};
+
+
+document.getElementById("map-container").appendChild(point);
+
 
 });
 
+
 });
 
-function mostrar(animal){
 
-document.getElementById("popup").style.display="block";
-
-document.getElementById("nombre").innerText=animal.Nombre;
-
-document.getElementById("foto").src=animal.Foto;
-
-document.getElementById("historia").innerText=animal.Historia;
-
-}
-
-function cerrar(){
+document.getElementById("close").onclick=()=>{
 
 document.getElementById("popup").style.display="none";
 
-}
+};
+
 
 </script>
+
 
 </body>
 </html>
